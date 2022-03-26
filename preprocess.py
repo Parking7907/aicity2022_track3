@@ -16,8 +16,11 @@ frame_path = "/home/data/aicity/frame/"
 output = pd.read_csv(label_list[0])
 #User ID	Filename	Camera View	Activity Type	Start Time	End Time	Label/Class ID	Appearance Block
 #File_list = output['Filename']
-
+length = len(label_list)
+p = 0
 for label_path in label_list:
+    print("Done : ", p, "/", length)
+    p+= 1
     video_l = label_path.split('/')
     #video_n = video_l[-1]
     dir_n = video_l[-2]
@@ -25,10 +28,19 @@ for label_path in label_list:
     
     #/home/data/aicity/frame/user_id_24026/Dashboard_User_id_24026_NoAudio_3/
     label = pd.read_csv(label_path)
+    print(label_path)
     File_list = label['Filename']
+    print(File_list)
     for i, filename in enumerate(File_list):
-        time_st = int(label['Start Time'][i].split(':')[0]) * 3600 + int(label['Start Time'][i].split(':')[1]) * 60 + int(label['Start Time'][i].split(':')[2])
-        time_en = int(label['End Time'][i].split(':')[0]) * 3600 + int(label['End Time'][i].split(':')[1]) * 60 + int(label['End Time'][i].split(':')[2])
+        print("len:", len(label['Start Time'][i].split(':')))
+        if len(label['Start Time'][i].split(':')) == 3:
+            time_st = int(label['Start Time'][i].split(':')[0]) * 3600 + int(label['Start Time'][i].split(':')[1]) * 60 + int(label['Start Time'][i].split(':')[2])
+            time_en = int(label['End Time'][i].split(':')[0]) * 3600 + int(label['End Time'][i].split(':')[1]) * 60 + int(label['End Time'][i].split(':')[2])
+        elif len(label['Start Time'][i].split(':')) ==2:
+            time_st = int(label['Start Time'][i].split(':')[0]) * 60 + int(label['Start Time'][i].split(':')[1])
+            time_en = int(label['End Time'][i].split(':')[0]) * 60 + int(label['End Time'][i].split(':')[1])
+        
+
         frame_st = time_st * 30 + 1
         frame_en = time_en * 30 + 1
         out_dir = result_path + dir_n + '/' 
@@ -52,7 +64,7 @@ for label_path in label_list:
         for j in range(frame_st, frame_en): # Frame_en은 제외
             
             frame_n = frame_dir + "%06d.jpg"%j
-            #print(frame_dir, frame_n)
+            #print(frame_n)
             try:
                 fr = Image.open(frame_n)
                 fr = np.array(fr)
@@ -66,3 +78,4 @@ for label_path in label_list:
         print(np_frames.shape)
         #pdb.set_trace()
         np.save(out_name, np_frames)
+    

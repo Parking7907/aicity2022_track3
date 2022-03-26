@@ -19,3 +19,17 @@ for video_name in video_list:
     #pdb.set_trace()
     command = ("mv {0} {1}".format(video_name, cc))
     output = subprocess.call(command, shell=True, stdout=None)
+
+video_list = glob("/home/data/aicity/frame_224/*/*")
+result_path = "/home/data/aicity/frame_224/"
+for video_name in video_list:
+    video_l = video_name.split('/')
+    video_n = video_l[-1]
+    video_true = ('/').join(video_l[:-1])
+    aa= video_n.split('NoAudio_')
+    bb= aa[0] + aa[1]
+    cc = video_true + '/' + bb
+    print(cc)
+    #pdb.set_trace()
+    command = ("mv {0} {1}".format(video_name, cc))
+    output = subprocess.call(command, shell=True, stdout=None)
