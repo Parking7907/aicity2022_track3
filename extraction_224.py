@@ -9,6 +9,7 @@ from shutil import rmtree
 video_list = glob("/home/data/aicity/*/*/*.MP4")
 video_list.sort()
 result_path = "/home/data/aicity/frame_224/"
+os.makedirs(result_path, exist_ok=True)
 for video_name in video_list:
     video_l = video_name.split('/')
     video_n = video_l[-1]

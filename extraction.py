@@ -7,7 +7,9 @@ from shutil import rmtree
 
 #ffmpeg -ss [시작시간] -t [길이] -i [동영상이름] -r [프레임레이트] -s [출력해상도] -qscale:v 2 -an(오디오부분 제거) -f image2 [이미지이름]
 video_list = glob("/home/data/aicity/*/*/*.MP4")
+video_list.sort()
 result_path = "/home/data/aicity/frame/"
+os.makedirs(result_path, exist_ok=True)
 for video_name in video_list:
     video_l = video_name.split('/')
     video_n = video_l[-1]
