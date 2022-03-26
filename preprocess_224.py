@@ -54,7 +54,10 @@ for label_path in label_list:
         frames = []
         #frames = np.empty((0, 1080,1920,3))
         print(filename)
+        filename = str(filename)
         if filename == ' ':
+            print("Nan")
+        elif filename == 'nan':
             print("Nan")
         else:
             print(filename)
@@ -73,8 +76,10 @@ for label_path in label_list:
                 continue
             #print(fr.shape)
             frames.append(fr)
-        out_name = out_dir + str(i) + '_' + class_id + '_' + label['Appearance Block'][i] + '_' + str(time_st) + '_' + str(time_en)
+        out_name = out_dir + str(i) + '_' + str(class_id) + '_' + label['Appearance Block'][i] + '_' + str(time_st) + '_' + str(time_en)
         np_frames = np.array(frames)
+        if np_frames.shape[0] == 0:
+            print(frame_n)
         print(np_frames.shape)
         #pdb.set_trace()
         np.save(out_name, np_frames)

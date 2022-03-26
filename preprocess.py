@@ -28,9 +28,9 @@ for label_path in label_list:
     
     #/home/data/aicity/frame/user_id_24026/Dashboard_User_id_24026_NoAudio_3/
     label = pd.read_csv(label_path)
-    print(label_path)
+    #print(label_path)
     File_list = label['Filename']
-    print(File_list)
+    #print(File_list)
     for i, filename in enumerate(File_list):
         print("len:", len(label['Start Time'][i].split(':')))
         if len(label['Start Time'][i].split(':')) == 3:
@@ -54,10 +54,13 @@ for label_path in label_list:
         frames = []
         #frames = np.empty((0, 1080,1920,3))
         print(filename)
+        filename = str(filename)
         if filename == ' ':
             print("Nan")
+        elif filename == 'nan':
+            print("Nan")
         else:
-            #print(filename)
+            print(filename)
             filename = filename.split(' ')[-1]
             frame_dir = frame_path + dir_n + '/' + filename + '/'
             print(frame_dir)
@@ -75,6 +78,8 @@ for label_path in label_list:
             frames.append(fr)
         out_name = out_dir + str(i) + '_' + class_id + '_' + label['Appearance Block'][i] + '_' + str(time_st) + '_' + str(time_en)
         np_frames = np.array(frames)
+        if np_frames.shape[0] == 0:
+            print(frame_n)
         print(np_frames.shape)
         #pdb.set_trace()
         np.save(out_name, np_frames)
