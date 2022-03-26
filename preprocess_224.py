@@ -28,9 +28,9 @@ for label_path in label_list:
     
     #/home/data/aicity/frame/user_id_24026/Dashboard_User_id_24026_NoAudio_3/
     label = pd.read_csv(label_path)
-    print(label_path)
+    #print(label_path)
     File_list = label['Filename']
-    print(File_list)
+    #print(File_list)
     for i, filename in enumerate(File_list):
         print("len:", len(label['Start Time'][i].split(':')))
         if len(label['Start Time'][i].split(':')) == 3:
@@ -57,7 +57,7 @@ for label_path in label_list:
         if filename == ' ':
             print("Nan")
         else:
-            #print(filename)
+            print(filename)
             filename = filename.split(' ')[-1]
             frame_dir = frame_path + dir_n + '/' + filename + '/'
             print(frame_dir)
