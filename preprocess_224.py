@@ -7,7 +7,7 @@ import pandas as pd
 from PIL import Image
 
 #ffmpeg -ss [시작시간] -t [길이] -i [동영상이름] -r [프레임레이트] -s [출력해상도] -qscale:v 2 -an(오디오부분 제거) -f image2 [이미지이름]
-label_list = glob("/home/data/aicity/A1/*/*.csv")
+label_list = glob("/home/data/aicity/*/*/*.csv")
 #print(label_list)
 label_list.sort()
 #print(label_list)
@@ -16,8 +16,11 @@ frame_path = "/home/data/aicity/frame_224/"
 output = pd.read_csv(label_list[0])
 #User ID	Filename	Camera View	Activity Type	Start Time	End Time	Label/Class ID	Appearance Block
 #File_list = output['Filename']
-length = len(label_list)
+
 p = 0
+#label_list = label_list[8:]
+length = len(label_list)
+print(label_list)
 for label_path in label_list:
     print("Done : ", p, "/", length)
     p+= 1
@@ -32,6 +35,7 @@ for label_path in label_list:
     File_list = label['Filename']
     #print(File_list)
     for i, filename in enumerate(File_list):
+        print(label['Start Time'][i])
         print("len:", len(label['Start Time'][i].split(':')))
         if len(label['Start Time'][i].split(':')) == 3:
             time_st = int(label['Start Time'][i].split(':')[0]) * 3600 + int(label['Start Time'][i].split(':')[1]) * 60 + int(label['Start Time'][i].split(':')[2])
@@ -53,7 +57,7 @@ for label_path in label_list:
         #frames = np.array([])
         frames = []
         #frames = np.empty((0, 1080,1920,3))
-        print(filename)
+        #print(filename)
         filename = str(filename)
         if filename == ' ':
             print("Nan")
@@ -67,7 +71,6 @@ for label_path in label_list:
         for j in range(frame_st, frame_en): # Frame_en은 제외
             
             frame_n = frame_dir + "%06d.jpg"%j
-            #print(frame_n)
             try:
                 fr = Image.open(frame_n)
                 fr = np.array(fr)
@@ -76,7 +79,8 @@ for label_path in label_list:
                 continue
             #print(fr.shape)
             frames.append(fr)
-        out_name = out_dir + str(i) + '_' + str(class_id) + '_' + label['Appearance Block'][i] + '_' + str(time_st) + '_' + str(time_en)
+        #print(label['Appearance Block'][i])
+        out_name = out_dir + str(i) + '_' + str(class_id) + '_' + str(label['Appearance Block'][i]) + '_' + str(time_st) + '_' + str(time_en)
         np_frames = np.array(frames)
         if np_frames.shape[0] == 0:
             print(frame_n)
