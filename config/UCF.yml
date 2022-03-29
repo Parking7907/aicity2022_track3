@@ -1,0 +1,64 @@
+#### general settings
+name: MYNET
+use_tb_logger: true
+
+#### datasets
+datasets:
+  name: UCF
+  train: /home/data/jinyoung/Server/UCF_exp/
+  valid: /home/data/jinyoung/Server/UCF_test/
+  test: /home/data/jinyoung/Server/UCF_test/
+  stride: 1
+
+dataloader:
+  train:
+    batch_size: 16
+    shuffle: true
+    # pin_memeory: true
+    num_workers: 24
+
+  valid:
+    batch_size: 16
+    shuffle: true
+    # pin_memeory: true
+    num_workers: 24
+
+  test:
+    batch_size: 16
+    shuffle: false
+    num_workers: 24
+
+#### network structures
+MYNET:
+  sequence_size: 30 # Temporal duration of input clips
+
+#### training settings: learning rate scheme, loss
+trainer:
+  epochs: 100
+  device: 1
+  save_path: /home/jinyoung/road_accident_detection/exp/
+  #ckpt_path: ckpt/eff_noatt.pt
+  comment: no comment
+    
+tester:
+  ckpt_path: /home/jinyoung/road_accident_detection/exp/CADP/22October_0345/ckpt/best.pt
+  device: 1
+
+
+criterion:
+  name: CrossEntropy
+
+optimizer:
+  name: Adam   ### Adam, RMSprop, SGD
+  lr: !!float 1e-3
+  # betas: (0.9, 0.999)
+  eps: !!float 1e-8
+  weight_decay: !!float 1e-6
+
+
+#### scheduler settings
+scheduler:
+  name: cycle
+  min_lr: !!float 1e-8
+  patience: 2
+  factor: 0.5

@@ -1,0 +1,63 @@
+#### general settings
+name: MYNET
+use_tb_logger: true
+
+#### datasets
+datasets:
+  name: AI_HUB_SPLIT
+  train: /hard1/pickle_data
+  valid: /hard1/pickle_data
+  stride: 1
+
+dataloader:
+  train:
+    batch_size: 16
+    shuffle: true
+    # pin_memeory: true
+    num_workers: 24
+
+  valid:
+    batch_size: 16
+    shuffle: true
+    # pin_memeory: true
+    num_workers: 24
+
+  test:
+    batch_size: 1
+    shuffle: false
+    num_workers: 24
+
+#### network structures
+MYNET:
+  sequence_size: 18 # Temporal duration of input clips
+
+#### training settings: learning rate scheme, loss
+trainer:
+  epochs: 10000
+  device: 0
+  save_path: /home/nas/user/jinyoung/ckpt/AI_HUB
+  #ckpt_path: ckpt/eff_noatt.pt
+  comment: no comment
+    
+tester:
+  ckpt_path: /home/minseok/Video_Action_Recognition/Video-Action-Recognition-RGB/ckpt/AI_HUB_DEMO/0824_new/August_24/0_99.0099.pt
+  device: 0 
+
+
+criterion:
+  name: CrossEntropy
+
+optimizer:
+  name: Adam   ### Adam, RMSprop, SGD
+  lr: !!float 1e-3
+  # betas: (0.9, 0.999)
+  eps: !!float 1e-8
+  weight_decay: !!float 1e-6
+
+
+#### scheduler settings
+scheduler:
+  name: cycle
+  min_lr: !!float 1e-8
+  patience: 2
+  factor: 0.5
