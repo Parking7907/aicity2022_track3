@@ -84,7 +84,7 @@ class ModelTrainer:
                 self.scheduler.step()
             elif self.sch_name == 'plateau':
                 self.scheduler.step(valid_loss)
-            self.logger.info("epoch: {} --- t_loss : {:0.3f}, train_acc = {}%, v_loss: {:0.3f}, val_acc: {}%, best_acc: {}%, best_epoch: {}, time: {:0.2f}s"\
+            self.logger.info("epoch: {} --- t_loss : {:0.3f}, train_acc = {:0.4f}%, v_loss: {:0.3f}, val_acc: {:0.4f}%, best_acc: {:0.4f}%, best_epoch: {}, time: {:0.2f}s"\
                                                             .format(epoch, train_loss, t_accuracy, valid_loss, v_accuracy, self.best_acc, self.best_epoch, duration))
             
             
@@ -120,6 +120,8 @@ class ModelTrainer:
             images = images.to(self.device)
             labels = labels.to(self.device)
             outputs  = self.model(images)
+            #print(outputs)
+            #print(labels)
             batch_loss = self.criterion(outputs, labels)
             batch_loss.backward()
             self.optimizer.step()
