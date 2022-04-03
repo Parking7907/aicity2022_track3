@@ -14,6 +14,7 @@ import torchvision
 import os
 from glob import glob
 # import albumentations as A
+# /home/data/aicity/test_224/
 class AICity(Dataset):
     def __init__(self, data_dir, data_partition, clip_len = 30, sample_stride=1, num_workers=24, image_size=224, norm_value=255,
                 multiscale_crop=4, temporal_stride=1):
@@ -30,18 +31,22 @@ class AICity(Dataset):
         self.labels = []
         i = 0
         #Read data path
-        class_list = [str(j) for j in range(19)]
-        for label in class_list:
-            vid_list = os.path.join(self.video_path, label)
-            print(vid_list + '/*')
-            pkl_list = glob(vid_list + '/*')
-               
-            self.video_list.extend(pkl_list)
-            self.labels.extend([i]*len(pkl_list))
-         
-            print('%s = %i complete %i'%(label, i, len(pkl_list)))
-            i += 1
-            #pdb.set_trace()
+        if data_partition == 'test':
+            vid_list = os.path.join(self.vdeo_path, '/*')
+            print("Test Video Done : %i"%(len(vid_list)))
+        else:
+            class_list = [str(j) for j in range(19)]
+            for label in class_list:
+                vid_list = os.path.join(self.video_path, label)
+                print(vid_list + '/*')
+                pkl_list = glob(vid_list + '/*')
+                
+                self.video_list.extend(pkl_list)
+                self.labels.extend([i]*len(pkl_list))
+            
+                print('%s = %i complete %i'%(label, i, len(pkl_list)))
+                i += 1
+                #pdb.set_trace()
         
         #pdb.set_trace()
     def __len__(self):
@@ -54,6 +59,7 @@ class AICity(Dataset):
             #print(self.video_list[idx])
             #self.video_name_list.append(self.video_list[idx])
             video = np.load(f)
+        
         data = self.stride_sampling(video, self.clip_len, self.temporal_stride)
         #data = video[start_idx:start_idx + self.clip_len]
         
@@ -82,6 +88,7 @@ class AICity(Dataset):
         if vid_len >= (target_frames-1)*stride + 1:
             start_idx = np.random.randint(vid_len - (target_frames-1)*stride)
             data = video[start_idx:start_idx+(target_frames-1)*stride+1:stride]
+            #print(start_idx, start_idx+(target_frames-1)*stride+1, np.shape(data))
             
 
         elif vid_len >= target_frames:
@@ -139,6 +146,6 @@ class AICity(Dataset):
         return data
 
 #with open('../config/AICity.yml', mode='r') as f:
-    #config = yaml.load(f,Loader=yaml.FullLoader)
+#    config = yaml.load(f,Loader=yaml.FullLoader)
 #train_dataset = AICity(config['datasets']['train'], 'train', config['MYNET']['sequence_size'], temporal_stride=config['datasets']['stride'])
 #pdb.set_trace()

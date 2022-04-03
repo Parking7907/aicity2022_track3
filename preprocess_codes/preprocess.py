@@ -1,70 +1,90 @@
-from matplotlib import pyplot as plt
 import json
 import sys, time, os, pdb, argparse, pickle, subprocess
 from glob import glob
 import numpy as np
 from shutil import rmtree
-import csv
+import pandas as pd
+from PIL import Image
 
 #ffmpeg -ss [시작시간] -t [길이] -i [동영상이름] -r [프레임레이트] -s [출력해상도] -qscale:v 2 -an(오디오부분 제거) -f image2 [이미지이름]
-command = ("ffmpeg -ss 00:00:00 -t 339 -i ./total.mp4 -an -y -s 1280X720 -qscale:v 2 -f image2 Demo/%06d.jpg")
-output = subprocess.call(command, shell=True, stdout=None)
-#command = ("cp -r preprocess/new_blackbox/ /home/jinyoung/share/sort/blackbox")
-#output = subprocess.call(command, shell=True, stdout=None)
-'''
-file_list = []
-for file_name in glob("./Demo/*.jpg"):
-    loca = os.path.basename(file_name)
-    file_list.append(loca)
-    video_name = os.path.splitext(loca)[0]
-list = np.array(file_list)
-np.save("assault_final.npy", list)
+label_list = glob("/home/data/aicity/*/*/*.csv")
+#print(label_list)
+label_list.sort()
+#print(label_list)
+result_path = "/home/data/aicity/byvideo/"
+frame_path = "/home/data/aicity/frame/"
+output = pd.read_csv(label_list[0])
+#User ID	Filename	Camera View	Activity Type	Start Time	End Time	Label/Class ID	Appearance Block
+#File_list = output['Filename']
 
+p = 0
+#label_list = label_list[8:]
+length = len(label_list)
+print(label_list)
+for label_path in label_list:
+    print("Done : ", p, "/", length)
+    p+= 1
+    video_l = label_path.split('/')
+    #video_n = video_l[-1]
+    dir_n = video_l[-2]
+    print(dir_n)
+    
+    #/home/data/aicity/frame/user_id_24026/Dashboard_User_id_24026_NoAudio_3/
+    label = pd.read_csv(label_path)
+    #print(label_path)
+    File_list = label['Filename']
+    #print(File_list)
+    for i, filename in enumerate(File_list):
+        print(label['Start Time'][i])
+        print("len:", len(label['Start Time'][i].split(':')))
+        if len(label['Start Time'][i].split(':')) == 3:
+            time_st = int(label['Start Time'][i].split(':')[0]) * 3600 + int(label['Start Time'][i].split(':')[1]) * 60 + int(label['Start Time'][i].split(':')[2])
+            time_en = int(label['End Time'][i].split(':')[0]) * 3600 + int(label['End Time'][i].split(':')[1]) * 60 + int(label['End Time'][i].split(':')[2])
+        elif len(label['Start Time'][i].split(':')) ==2:
+            time_st = int(label['Start Time'][i].split(':')[0]) * 60 + int(label['Start Time'][i].split(':')[1])
+            time_en = int(label['End Time'][i].split(':')[0]) * 60 + int(label['End Time'][i].split(':')[1])
+        
 
+        frame_st = time_st * 30 + 1
+        frame_en = time_en * 30 + 1
+        out_dir = result_path + dir_n + '/' 
+        os.makedirs(out_dir, exist_ok=True)
+        if label['Label/Class ID'][i] == "NA":
+            class_id = '18'
+        else:
+            class_id = str(label['Label/Class ID'][i])
 
-for file_name in glob("./sk/*"):
-    loca = os.path.basename(file_name)
-    video_name = os.path.splitext(loca)[0]
-    file_n = os.path.join(file_name,"alphapose-results.json")
-    print(video_name)
-    with open(file_n,"r") as alpha:
-        data = json.load(alpha)
-    #data = np.array(data)
-    data_len = len(data)
-    #print(data_len)
-    tmp_box = [[0 for col in range(1)] for row in range(150)]
-    tmp_list = [[0 for col in range(1)] for row in range(150)]
-    tmp_1 = {}
-
-
-    #print(data_len)
-    for i in range(data_len):
-        image_id = int(os.path.splitext(data[i]['image_id'])[0])
-        keypoints = data[i]['keypoints']
-        box = data[i]['box']
-        #print(box)
-        #print(image_id)
-        #print(keypoints)
-        #tmp_list = np.append([tmp_list,keypoints], axis=0)
-        #print(tmp_list[image_id])
-        if tmp_list[image_id] == [0]:
-            tmp_list[image_id][0]=keypoints
-        elif tmp_list[image_id] != [0]:
-            tmp_list[image_id].append(keypoints)
-        if tmp_box[image_id] == [0]:
-            tmp_box[image_id][0]=box
-        elif tmp_box[image_id] != [0]:
-            tmp_box[image_id].append(box)
-    #print(tmp_list)
-    #print(len(tmp_box))
-    #print(tmp_list)
-#         tmp_1 = {'name':video_name, 'keypoints':tmp_list, 'box':tmp_box}
-    tmp_1 = {'keypoints':tmp_list, 'box':tmp_box}
-    #pickle.dump
-    with open('train/Fight/'+video_name+'.pkl', 'wb') as f:  
-        pickle.dump(tmp_1, f)
-
-    print(tmp_1)
-    print(len(tmp_1['box']))
-    #print(len(tmp_1['keypoints'][0]))
-'''
+        #frames = np.array([])
+        frames = []
+        #frames = np.empty((0, 1080,1920,3))
+        #print(filename)
+        filename = str(filename)
+        if filename == ' ':
+            print("Nan")
+        elif filename == 'nan':
+            print("Nan")
+        else:
+            print(filename)
+            filename = filename.split(' ')[-1]
+            frame_dir = frame_path + dir_n + '/' + filename + '/'
+            print(frame_dir)
+        for j in range(frame_st, frame_en): # Frame_en은 제외
+            
+            frame_n = frame_dir + "%06d.jpg"%j
+            try:
+                fr = Image.open(frame_n)
+                fr = np.array(fr)
+            except:
+                #print("Error : ", frame_n, i)
+                continue
+            #print(fr.shape)
+            frames.append(fr)
+        #print(label['Appearance Block'][i])
+        out_name = out_dir + str(i) + '_' + str(class_id) + '_' + str(label['Appearance Block'][i]) + '_' + str(time_st) + '_' + str(time_en)
+        np_frames = np.array(frames)
+        if np_frames.shape[0] == 0:
+            print(frame_n)
+        print(np_frames.shape)
+        #pdb.set_trace()
+        np.save(out_name, np_frames)
+    

@@ -38,15 +38,15 @@ MYNET:
 
 #### training settings: learning rate scheme, loss
 trainer:
-  epochs: 100
-  device: 0
+  epochs: 1000
+  device: 1
   save_path: /home/data/aicity/weight/
   #ckpt_path: ckpt/eff_noatt.pt
   comment: no comment
     
 tester:
-  ckpt_path: /home/jinyoung/road_accident_detection/exp/CADP/09November_0956/ckpt/best.pt
-  device: 0
+  ckpt_path: /home/data/aicity/weight/CADP/29March_0852/ckpt/best.pt
+  device: 1
 
 
 criterion:
