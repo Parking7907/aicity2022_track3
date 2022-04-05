@@ -59,23 +59,21 @@ class ModelTester:
             for b, batch in tqdm(enumerate(self.test_loader), total=len(self.test_loader)):
                 
                 images, labels, names = batch
-
-                    
                 images = images.to(self.device)
                 labels = labels.to(self.device)
-                outputs = self.model(images)
-                
+                print(images.shape)
+                for i in range(int(images.shape[1])-31):
+                    data = images[:,i:i+31,:,:]
+                    outputs = self.model(data)
+                    _, output = torch.max(outputs, 1)
+
+
                 # [B x Class]
                 
-                _, output = torch.max(outputs, 1)
                 #pdb.set_trace()
                 output_list.extend(output)
                 label_list.extend(labels)
-
-                        
                 batch_acc = float(len(output) - sum(abs(output-labels)))/len(output)
-                
-
                 #frame per video...
                 names_l = list(names)
                 video_n = ['a' for _ in range(len(names_l))]

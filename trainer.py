@@ -71,7 +71,9 @@ class ModelTrainer:
         
         for epoch in tqdm(range(self.epochs)):
             start = time.time()
+            print("Start Training")
             train_loss, t_accuracy= self.train_single_epoch(epoch)
+            print("Start Validation")
             valid_loss, v_accuracy = self.inference(epoch)
             duration = time.time() - start
 
@@ -137,7 +139,7 @@ class ModelTrainer:
                 #print(names)
 
             print("{}/{} --- {}".format(b, batch_size, batch_loss), end='\r')
-        
+        print("Train Done")
         if np.isnan(total_loss):
             print("is nan on", str(epoch), )
 
@@ -152,7 +154,7 @@ class ModelTrainer:
 
         with torch.no_grad():
             for b, batch in enumerate(self.valid_loader):
-                
+                print("Validation:", b)
                 images, labels, names = batch
                 B, T, C, H, W = images.shape
                 images = images.to(self.device)

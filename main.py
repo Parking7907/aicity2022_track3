@@ -7,11 +7,12 @@ import yaml
 from torch.utils.data import DataLoader
 from trainer import ModelTrainer
 from tester import ModelTester
+from postprocess import Postprocess
 from utils.setup import setup_solver
 import os
 import pickle
 import numpy as np
-from model_github import MYNET
+from model_github import MYNET, MYNET_224
 
 def train(args):
     with open(os.path.join(args.config,args.dataset + '.yml'), mode='r') as f:
@@ -47,29 +48,31 @@ def test(args):
     output, wrong_list = tester.test()
     output = np.array(output)
     wrong_list = np.array(wrong_list)
-    with open("output.pkl", "wb") as f:
-        pickle.dump(output, f)
-    with open("name.pkl", "wb")as fr:
-        pickle.dump(wrong_list, fr)
+    #with open("output.pkl", "wb") as f:
+        #pickle.dump(output, f)
+    #with open("name.pkl", "wb")as fr:
+        #pickle.dump(wrong_list, fr)
 def demo(args): 
     with open(os.path.join(args.config,args.dataset + '.yml'), mode='r') as f:
         config = yaml.load(f,Loader=yaml.FullLoader)
 
-    model = MYNET(**config['MYNET'])
+    model = MYNET_224(**config['MYNET'])
     
-    if args.dataset == 'CADP':
-        from datasets.CADP import CADP_Demo
-        test_dataset = CADP_Demo(config['datasets']['demo'], config['MYNET']['sequence_size'])
+    if args.dataset == 'AICity':
+        from datasets.AICity import AICity_Demo
+        test_dataset = AICity_Demo(config['datasets']['test'], config['MYNET']['sequence_size'])
     #pdb.set_trace()
-    test_loader = DataLoader(test_dataset, **config['dataloader']['demo'])
-    tester = ModelTester(model, test_loader, **config['tester'])
-    output, wrong_list = tester.demo()
+    print(len(test_dataset))
+    test_loader = DataLoader(test_dataset, **config['dataloader']['test'])
+    tester = Postprocess(model, test_loader, **config['tester'])
+    output, names = tester.test()
+    print(output.shape, names.shape)
     output = np.array(output)
-    wrong_list = np.array(wrong_list)
+    names = np.array(names)
     with open("output.pkl", "wb") as f:
         pickle.dump(output, f)
     with open("name.pkl", "wb")as fr:
-        pickle.dump(wrong_list, fr)
+        pickle.dump(names, fr)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
