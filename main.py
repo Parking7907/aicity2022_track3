@@ -67,14 +67,15 @@ def demo(args):
     print(len(test_dataset))
     test_loader = DataLoader(test_dataset, **config['dataloader']['test'])
     tester = Postprocess(model, test_loader, **config['tester'])
-    output, names = tester.test()
-    print(output.shape, names.shape)
-    output = np.array(output)
-    names = np.array(names)
+    est_dict, name_list = tester.test()
+    for filename in est_dict:
+        
+    output = np.array(est_dict)
+    names = np.array(name_list)
     with open("output.pkl", "wb") as f:
         pickle.dump(output, f)
     with open("name.pkl", "wb")as fr:
-        pickle.dump(names, fr)
+        pickle.dump(name_list, fr)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

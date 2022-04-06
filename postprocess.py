@@ -45,15 +45,8 @@ class Postprocess:
 
     def test(self):
         self.model.eval()
-        video_dict = {}
-        GT_dict = {}
-        output_list = []
-        wrong_list = []
-        F1_score = 0
-        TP = 0
-        TN = 0
-        FP = 0
-        FN = 0
+        est_dict = {}
+        name_list = []
         output_dir = "/home/data/aicity/infer/"
         with torch.no_grad():
             for b, batch in tqdm(enumerate(self.test_loader), total=len(self.test_loader)):
@@ -63,6 +56,7 @@ class Postprocess:
                 names = names[0]
                 #print(images.shape) #2, 1800, 3, 224, 224
                 output_list = []
+                output_nolist = []
                 for i in range(int(images.shape[1])-31):
                     data = images[:,i:i+31,:,:]
                     #print(data.shape) # 2, 31, 3, 224, 224
@@ -73,16 +67,17 @@ class Postprocess:
                     output_list.extend(output.cpu())
                     if i % 500 == 0:
                         print("Done:", i, "/", str(int(images.shape[1])-31))
-                    
+                name_list.append(names)
                 print(len(output_list))
                 print(output_list)
                 output = np.array(output_list)
+                est_dict[names] = output
                 output = output.astype(np.float64)
                 np_name = output_dir + names + '.npy'
                 print(np_name)
                 with open(np_name, 'wb') as f:
                     np.save(f, output)
                 
-        return output_list, names
+        return est_dict, name_list
 
 
