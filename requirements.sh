@@ -1,0 +1,1 @@
+pip install pyyaml tensorboard tqdm torch_optimizer efficientnet_pytorch opencv-python
