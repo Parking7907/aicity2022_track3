@@ -181,13 +181,16 @@ class AICity_Demo(Dataset):
             #self.video_name_list.append(self.video_list[idx])
             video = np.load(f)
         true_name_list = os.path.basename(self.video_list[idx]).split('_')
-        true_name = true_name_list[-3] + '_' + true_name_list[0] + '_' + true_name_list[-2] + '_' + true_name_list[-2]
+        #print(true_name_list)
+        true_name = true_name_list[-3] + '_' + true_name_list[0] + '_' + true_name_list[-2] + '_' + true_name_list[-1].split('.')[0]
+        #print(true_name)
         for image_ in video:
             image_list.append(torch.from_numpy(image_.transpose(-1,0,1).copy()))
 
         output = self.normalize(torch.stack(image_list)) # 31,3,224,224
         #print(torch.max(output))
         #print(output.type()) # torch. DoubleTensor, 이전꺼는 torch.ByteTensor
+        
         
         return output, true_name
 

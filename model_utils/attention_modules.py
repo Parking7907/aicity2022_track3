@@ -65,7 +65,7 @@ class Temporal_Attention(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.dropout = nn.Dropout(p=dropout_ratio)
         self.pred = nn.Linear(feature_dim, num_class)
-        
+        self.softmax = nn.Softmax(dim=1)
         # fc init
         for m in self.modules():
             if isinstance(m, nn.Linear):
@@ -90,5 +90,6 @@ class Temporal_Attention(nn.Module):
         #[B, d]
         x = self.dropout(x)
         x = self.pred(x)
+        x = self.softmax(x)
         #[B, 2]
         return x

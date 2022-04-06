@@ -67,15 +67,37 @@ def demo(args):
     print(len(test_dataset))
     test_loader = DataLoader(test_dataset, **config['dataloader']['test'])
     tester = Postprocess(model, test_loader, **config['tester'])
-    est_dict, name_list = tester.test()
+    est_dict, score_dict, name_list = tester.test()
+    new_dict = {}
+    new_dict_2 = {}
+    final_output = {}
     for filename in est_dict:
-        
-    output = np.array(est_dict)
-    names = np.array(name_list)
-    with open("output.pkl", "wb") as f:
-        pickle.dump(output, f)
-    with open("name.pkl", "wb")as fr:
-        pickle.dump(name_list, fr)
+        nn = filename.split('_')
+        ss = int(nn[-1].split('.')[0])
+        vv = ('_').join(nn[:-1])
+        print(vv, ss)
+        if vv not in new_dict:
+            new_dict[vv] = {}
+            new_dict[vv][ss] = est_dict[filename]
+            new_dict_2[vv] = {}
+            new_dict_2[vv][ss] = score_dict[filename]
+        else:
+            new_dict[vv][ss] = est_dict[filename]
+            new_dict_2[vv][ss] = score_dict[filename]
+    #pdb.set_trace()
+    for filename in new_dict:
+        print(filename)
+        final_output[filename] = {'label':[], 'score':[]}
+        print(len(new_dict[filename]))
+        for k in range(len(new_dict[filename])):
+            print(filename, k)
+            final_output[filename]['label'].append(new_dict[filename][k])
+            final_output[filename]['score'].append(new_dict_2[filename][k])
+        print(len(final_output[filename]))
+        with open('%s%s.pkl'%(args.save_dir,filename), 'wb') as f: 
+            pickle.dump(final_output[filename], f)
+    with open("%soutput.pkl"%args.save_dir, "wb") as f:
+        pickle.dump(final_output, f)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -84,6 +106,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--dataset', type=str, help='Dataset')
     parser.add_argument('-m', '--mode', type=str, help='Train or Test')
     parser.add_argument('-r', '--resolution', type=int, help='Resolution, 224 or 320')
+    parser.add_argument('-s', '--save_dir', type=str, default ='/home/data/aicity/output/', help='output path')
     args = parser.parse_args()
 
     if args.mode == 'Train':

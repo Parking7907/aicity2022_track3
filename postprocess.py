@@ -46,6 +46,7 @@ class Postprocess:
     def test(self):
         self.model.eval()
         est_dict = {}
+        score_dict = {}
         name_list = []
         output_dir = "/home/data/aicity/infer/"
         with torch.no_grad():
@@ -56,28 +57,34 @@ class Postprocess:
                 names = names[0]
                 #print(images.shape) #2, 1800, 3, 224, 224
                 output_list = []
-                output_nolist = []
+                score_list = []
                 for i in range(int(images.shape[1])-31):
                     data = images[:,i:i+31,:,:]
                     #print(data.shape) # 2, 31, 3, 224, 224
                     outputs = self.model(data)
+                    #print(outputs)
                     #print(outputs.shape) # 2, 19
-                    _, output = torch.max(outputs, 1)
+                    #print(torch.sum(outputs[0]))
+                    score, output = torch.max(outputs, 1)
+                    #print(c,output)
                     #print(output.shape, output) #2
                     output_list.extend(output.cpu())
+                    score_list.extend(score.cpu())
                     if i % 500 == 0:
                         print("Done:", i, "/", str(int(images.shape[1])-31))
                 name_list.append(names)
-                print(len(output_list))
-                print(output_list)
-                output = np.array(output_list)
-                est_dict[names] = output
-                output = output.astype(np.float64)
+                print(names)
+                #print(output_list)
+                scores = np.array(score_list)
+                outputs = np.array(output_list)
+                score_dict[names] = scores
+                est_dict[names] = outputs
+                outputs = outputs.astype(np.float64)
                 np_name = output_dir + names + '.npy'
                 print(np_name)
                 with open(np_name, 'wb') as f:
-                    np.save(f, output)
+                    np.save(f, outputs)
                 
-        return est_dict, name_list
+        return est_dict, score_dict, name_list
 
 
