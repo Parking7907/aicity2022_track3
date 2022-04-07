@@ -12,8 +12,8 @@ label_list = glob("/home/data/aicity/*/*/*.csv")
 label_list.sort()
 label_list = label_list[2:]
 #print(label_list)
-result_path = "/home/data/aicity/byvideo_224/"
-frame_path = "/home/data/aicity/frame_224/"
+result_path = "/home/data/aicity/byvideo_320r/"
+frame_path = "/home/data/aicity/frame_320/"
 output = pd.read_csv(label_list[0])
 #User ID	Filename	Camera View	Activity Type	Start Time	End Time	Label/Class ID	Appearance Block
 #File_list = output['Filename']
