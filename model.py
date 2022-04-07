@@ -13,7 +13,7 @@ class MYNET(nn.Module):
         self.sequence_size = sequence_size
         self.motion_features = Motion_Features_Dilation5(sequence_size+1)
         self.backbone = EfficientNet.from_pretrained('efficientnet-b0', in_channels=3)
-        self.TA = TA_nopool(n_segment=sequence_size//3, feature_dim=1000, num_class=19)
+        self.TA = TA_nopool(n_segment=sequence_size//3, feature_dim=1000, num_class=20)
         
     def forward(self, rgb):
         B = rgb.shape[0]

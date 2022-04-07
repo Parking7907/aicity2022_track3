@@ -58,7 +58,7 @@ def demo(args):
     with open(os.path.join(args.config,args.dataset + '.yml'), mode='r') as f:
         config = yaml.load(f,Loader=yaml.FullLoader)
 
-    model = MYNET_224(**config['MYNET'])
+    model = MYNET(**config['MYNET'])
     
     if args.dataset == 'AICity':
         from datasets.AICity import AICity_Demo

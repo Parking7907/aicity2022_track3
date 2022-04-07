@@ -7,6 +7,7 @@ import pdb
 #/home/data/aicity/byclass_224/
 #/home/data/aicity/byframe_224/
 #/home/data/aicity/aicity_frame_224/
+'''
 video_path = "/home/data/aicity/byvideo_320/"
 driver_list = glob(video_path + "*")
 driver_list.sort()
@@ -32,13 +33,13 @@ for driver_name in Validation_driver:
     print("mv {0} {1}".format(driver_name,Validation_dir))
     command = ("mv {0} {1}".format(driver_name,Validation_dir))
     output = subprocess.call(command, shell=True, stdout=None)
-
+'''
 
 
 npy_list = glob("/home/data/aicity/byvideo_320/Train/*/*.npy")
 npy_list.sort()
 result_path = "/home/data/aicity/byclass_320/Train/"
-for i in range(19):
+for i in range(20):
     os.makedirs(result_path + str(i), exist_ok=True)
 #pdb.set_trace()
 print(len(npy_list))
@@ -59,8 +60,8 @@ for npy_n in npy_list:
         classname = 18
         print(filename, classname)
         print("NA")
-    print("cp {0} {1}{2}".format(npy_n, result_path, classname))
-    command = ("cp {0} {1}{2}".format(npy_n, result_path, classname))
+    print("mv {0} {1}{2}".format(npy_n, result_path, classname))
+    command = ("mv {0} {1}{2}".format(npy_n, result_path, classname))
     output = subprocess.call(command, shell=True, stdout=None)
     #pdb.set_trace()
 
@@ -85,7 +86,7 @@ for npy_n in npy_list:
         classname = 18
         print(filename, classname)
         print("NA")
-    print("cp {0} {1}{2}".format(npy_n, result_path, classname))
-    command = ("cp {0} {1}{2}".format(npy_n, result_path, classname))
+    print("mv {0} {1}{2}".format(npy_n, result_path, classname))
+    command = ("mv {0} {1}{2}".format(npy_n, result_path, classname))
     output = subprocess.call(command, shell=True, stdout=None)
     #pdb.set_trace()

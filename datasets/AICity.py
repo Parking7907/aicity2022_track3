@@ -35,7 +35,7 @@ class AICity(Dataset):
             vid_list = glob(os.path.join(self.video_path, '/*'))
             print("Test Video Done : %i"%(len(vid_list)))
         else:
-            class_list = [str(j) for j in range(19)]
+            class_list = [str(j) for j in range(20)]
             for label in class_list:
                 vid_list = os.path.join(self.video_path, label)
                 print(vid_list + '/*')

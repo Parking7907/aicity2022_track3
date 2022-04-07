@@ -8,7 +8,7 @@ datasets:
   name: CADP
   train: /home/data/aicity/byclass_320/Train
   valid: /home/data/aicity/byclass_320/Validation
-  test: /home/data/aicity/test_224
+  test: /home/data/aicity/test_320
   stride: 1
 
   #train: /home/data/jinyoung/Server/Demo/Train/
@@ -16,21 +16,21 @@ datasets:
   #test: /home/data/jinyoung/Server/Demo/Test/
 dataloader:
   train:
-    batch_size: 8
+    batch_size: 12
     shuffle: true
     # pin_memeory: true
-    num_workers: 24
+    num_workers: 32
 
   valid:
-    batch_size: 8
+    batch_size: 12
     shuffle: true
     # pin_memeory: true
-    num_workers: 24
+    num_workers: 32
 
   test:
     batch_size: 1
     shuffle: false
-    num_workers: 24
+    num_workers: 32
 
 #### network structures
 MYNET:
@@ -45,7 +45,7 @@ trainer:
   comment: no comment
     
 tester:
-  ckpt_path: /home/data/aicity/weight/CADP/03April_0145/ckpt/best.pt
+  ckpt_path: /home/data/aicity/weight/CADP/06April_0135/ckpt/best.pt
   device: 0
 
 
