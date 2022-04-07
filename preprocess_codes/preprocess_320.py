@@ -10,7 +10,7 @@ from PIL import Image
 label_list = glob("/home/data/aicity/*/*/*.csv")
 #print(label_list)
 label_list.sort()
-label_list = label_list[2:]
+#label_list = label_list[2:]
 #print(label_list)
 result_path = "/home/data/aicity/byvideo_320r/"
 frame_path = "/home/data/aicity/frame_320/"

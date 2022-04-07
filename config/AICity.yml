@@ -16,13 +16,13 @@ datasets:
   #test: /home/data/jinyoung/Server/Demo/Test/
 dataloader:
   train:
-    batch_size: 12
+    batch_size: 8
     shuffle: true
     # pin_memeory: true
     num_workers: 32
 
   valid:
-    batch_size: 12
+    batch_size: 8
     shuffle: true
     # pin_memeory: true
     num_workers: 32
