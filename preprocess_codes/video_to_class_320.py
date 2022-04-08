@@ -6,8 +6,8 @@ from shutil import rmtree
 import pdb
 
 #Train Validation Split
-'''
-video_path = "/home/data/aicity/byvideo_224/"
+
+video_path = "/home/data/aicity/byvideo_320r/"
 driver_list = glob(video_path + "*")
 driver_list.sort()
 Train_dir = video_path + "Train"
@@ -37,11 +37,11 @@ print("rename 's/ //g' {0}*/*/*.npy".format(video_path))
 command = ("rename 's/ //g' {0}*/*/*.npy".format(video_path))
 output = subprocess.call(command, shell=True, stdout=None)
 
-
+pdb.set_trace()
 ################
-npy_list = glob("/home/data/aicity/byvideo_224/Train/*/*.npy")
+npy_list = glob("/home/data/aicity/byvideo_320r/Train/*/*.npy")
 npy_list.sort()
-result_path = "/home/data/aicity/byclass_224/Train/"
+result_path = "/home/data/aicity/byclass_320r/Train/"
 for i in range(20):
     os.makedirs(result_path + str(i), exist_ok=True)
 #pdb.set_trace()
@@ -68,10 +68,10 @@ for npy_n in npy_list:
     output = subprocess.call(command, shell=True, stdout=None)
     #pdb.set_trace()
 
-'''
-npy_list = glob("/home/data/aicity/byvideo_224/Validation/*/*.npy")
+
+npy_list = glob("/home/data/aicity/byvideo_320r/Validation/*/*.npy")
 npy_list.sort()
-result_path = "/home/data/aicity/byclass_224/Validation/"
+result_path = "/home/data/aicity/byclass_320r/Validation/"
 for i in range(20):
     os.makedirs(result_path + str(i), exist_ok=True)
 #pdb.set_trace()
@@ -88,7 +88,7 @@ for npy_n in npy_list:
     except:
         classname = 18
         print(filename, classname)
-        print("NA")
+        #print("NA")
     print("mv {0} {1}{2}".format(npy_n, result_path, classname))
     command = ("mv {0} {1}{2}".format(npy_n, result_path, classname))
     output = subprocess.call(command, shell=True, stdout=None)

@@ -70,7 +70,7 @@ for label_path in label_list:
             print("No Undistracted :", end_time, time_st)
         else:
             print("Undistracted :", end_time, time_st)
-            if end_time - time_st < 1:
+            if end_time - time_st > 1:
                 pass
             else:
                 frame_st = end_time * 30 + 1
@@ -88,13 +88,11 @@ for label_path in label_list:
                         continue
                     #print(fr.shape)
                     frames.append(fr)
-                #print(label['Appearance Block'][i])
                 out_name = out_dir + str(i) + '_' + str(undis_id) + '_' + str(label['Appearance Block'][i]) + '_' + str(end_time) + '_' + str(time_st-1)
                 np_frames = np.array(frames)
-                
                 if np_frames.shape[0] == 0:
                     print("Error on distracted :", frame_n)
-                print(out_name)
+                print("Producing 19 : ", out_name)
                 print(np_frames.shape)
                 
                 #pdb.set_trace()
