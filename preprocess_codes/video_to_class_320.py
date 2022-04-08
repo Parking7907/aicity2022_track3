@@ -37,7 +37,7 @@ print("rename 's/ //g' {0}*/*/*.npy".format(video_path))
 command = ("rename 's/ //g' {0}*/*/*.npy".format(video_path))
 output = subprocess.call(command, shell=True, stdout=None)
 
-pdb.set_trace()
+#pdb.set_trace()
 ################
 npy_list = glob("/home/data/aicity/byvideo_320r/Train/*/*.npy")
 npy_list.sort()

@@ -6,7 +6,7 @@ from shutil import rmtree
 import pdb
 
 #Train Validation Split
-'''
+
 video_path = "/home/data/aicity/byvideo_224/"
 driver_list = glob(video_path + "*")
 driver_list.sort()
@@ -68,7 +68,7 @@ for npy_n in npy_list:
     output = subprocess.call(command, shell=True, stdout=None)
     #pdb.set_trace()
 
-'''
+
 npy_list = glob("/home/data/aicity/byvideo_224/Validation/*/*.npy")
 npy_list.sort()
 result_path = "/home/data/aicity/byclass_224/Validation/"
