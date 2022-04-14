@@ -6,9 +6,9 @@ use_tb_logger: true
 #### datasets
 datasets:
   name: CADP
-  train: /home/data/aicity/byclass_320r/Train
-  valid: /home/data/aicity/byclass_320r/Validation
-  test: /home/data/aicity/test_320
+  train: /home/data/aicity/byclass_224/Train
+  valid: /home/data/aicity/byclass_224/Validation
+  test: /home/data/aicity/test_224
   stride: 1
 
   #train: /home/data/jinyoung/Server/Demo/Train/
@@ -16,21 +16,21 @@ datasets:
   #test: /home/data/jinyoung/Server/Demo/Test/
 dataloader:
   train:
-    batch_size: 8
+    batch_size: 16
     shuffle: true
     # pin_memeory: true
     num_workers: 32
 
   valid:
-    batch_size: 8
+    batch_size: 16
     shuffle: true
     # pin_memeory: true
     num_workers: 32
 
   test:
-    batch_size: 4
+    batch_size: 1
     shuffle: false
-    num_workers: 0
+    num_workers: 32
 
 #### network structures
 MYNET:
@@ -39,13 +39,13 @@ MYNET:
 #### training settings: learning rate scheme, loss
 trainer:
   epochs: 1000
-  device: 1
+  device: 0
   save_path: /home/data/aicity/weight/
   #ckpt_path: ckpt/eff_noatt.pt
   comment: no comment
     
 tester:
-  ckpt_path: /home/data/aicity/weight/CADP/08April_0729/ckpt/best.pt
+  ckpt_path: /home/data/aicity/weight/CADP/06April_0135/ckpt/best.pt
   device: 0
 
 

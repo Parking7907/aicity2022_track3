@@ -13,7 +13,6 @@ import os
 import pickle
 import numpy as np
 from model_github import MYNET, MYNET_224
-from model_new import NEW_MYNET, NEW_MYNET_224
 
 def train(args):
     with open(os.path.join(args.config,args.dataset + '.yml'), mode='r') as f:
@@ -39,58 +38,27 @@ def train(args):
 def test(args):
     with open(os.path.join(args.config,args.dataset + '.yml'), mode='r') as f:
         config = yaml.load(f,Loader=yaml.FullLoader)
-        
-    if args.resolution == 224:
-        model = NEW_MYNET_224(**config['MYNET'])
-    elif args.resolution == 320:
-        model = NEW_MYNET(**config['MYNET'])
+
+    model = MYNET(**config['MYNET'])
     
     if args.dataset == 'AICity':
-        from datasets.AICity import AICity_Demo
-        test_dataset = AICity_Demo(config['datasets']['test'],30)
+        from datasets.AICity import AICity
+        test_dataset = AICity(config['datasets']['test'], config['MYNET']['sequence_size'])
     #pdb.set_trace()
-    print(len(test_dataset))
     test_loader = DataLoader(test_dataset, **config['dataloader']['test'])
     tester = ModelTester(model, test_loader, **config['tester'])
-    est_dict, score_dict, name_list = tester.test()
-    new_dict = {}
-    new_dict_2 = {}
-    final_output = {}
-    for filename in est_dict:
-        nn = filename.split('_')
-        ss = int(nn[-1].split('.')[0])
-        vv = ('_').join(nn[:-1])
-        print(vv, ss)
-        if vv not in new_dict:
-            new_dict[vv] = {}
-            new_dict[vv][ss] = est_dict[filename]
-            new_dict_2[vv] = {}
-            new_dict_2[vv][ss] = score_dict[filename]
-        else:
-            new_dict[vv][ss] = est_dict[filename]
-            new_dict_2[vv][ss] = score_dict[filename]
-    #pdb.set_trace()
-    for filename in new_dict:
-        print(filename)
-        final_output[filename] = {'label':[], 'score':[]}
-        print(len(new_dict[filename]))
-        for k in range(len(new_dict[filename])):
-            print(filename, k)
-            final_output[filename]['label'].append(new_dict[filename][k])
-            final_output[filename]['score'].append(new_dict_2[filename][k])
-        print(len(final_output[filename]))
-        with open('%s%s.pkl'%(args.save_dir,filename), 'wb') as f: 
-            pickle.dump(final_output[filename], f)
-    with open("%soutput.pkl"%args.save_dir, "wb") as f:
-        pickle.dump(final_output, f)
+    output, wrong_list = tester.test()
+    output = np.array(output)
+    wrong_list = np.array(wrong_list)
+    #with open("output.pkl", "wb") as f:
+        #pickle.dump(output, f)
+    #with open("name.pkl", "wb")as fr:
+        #pickle.dump(wrong_list, fr)
 def demo(args): 
     with open(os.path.join(args.config,args.dataset + '.yml'), mode='r') as f:
         config = yaml.load(f,Loader=yaml.FullLoader)
 
-    if args.resolution == 224:
-        model = MYNET_224(**config['MYNET'])
-    elif args.resolution == 320:
-        model = MYNET(**config['MYNET'])
+    model = MYNET(**config['MYNET'])
     
     if args.dataset == 'AICity':
         from datasets.AICity import AICity_Demo
